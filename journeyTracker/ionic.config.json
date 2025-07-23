@@ -1,0 +1,7 @@
+{
+  "name": "journeyTracker",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
