@@ -31,10 +31,21 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./alert/alert.page').then((m) => m.AlertPage),
       },
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full',
+      },
     ],
   },
   {
     path: 'contacts',
-    loadComponent: () => import('./contacts/contacts.page').then( m => m.ContactsPage)
+    loadComponent: () =>
+      import('./contacts/contacts.page').then((m) => m.ContactsPage),
+  },
+  {
+    path: 'test-camera',
+    loadComponent: () =>
+      import('./camera/camera.page').then((m) => m.CameraPage),
   },
 ];

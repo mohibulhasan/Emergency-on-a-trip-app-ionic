@@ -1,13 +1,33 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>camera</ion-title>
+    <ion-title>Capture Bus Photo</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">camera</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding" fullscreen>
+  <!-- <ion-button (click)="debug()">Test Tap</ion-button> -->
+  <ion-card *ngIf="busPhoto">
+    <ion-card-header>
+      <ion-card-title>Last Captured</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-img [src]="busPhoto"></ion-img>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button
+    shape="round"
+    fill="solid"
+    color="primary"
+    size="large"
+    class="capture-button"
+    (click)="takePhoto()"
+  >
+    📸 Take Photo
+  </ion-button>
 </ion-content>
+
+<!-- <ion-content class="ion-padding">
+  <h1>This is Camera Page</h1>
+  <ion-button (click)="debug()">Try Debug Tap</ion-button>
+</ion-content> -->

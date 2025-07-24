@@ -1,0 +1,12 @@
+.capture-button {
+  position: fixed;
+  bottom: 70px; // 👈 just above tab bar height
+  left: 20%;
+  right: 20%;
+  z-index: 1000; // 👈 ensures it's above tab bar
+}
+
+// .capture-button {
+//   z-index: 1000;
+//   pointer-events: auto;
+// }
