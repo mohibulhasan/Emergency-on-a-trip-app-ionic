@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Trusted Contacts</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="fetchContacts()">Import from Phone</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list *ngIf="contactList.length">
+    <ion-list-header> Select Contacts to Save </ion-list-header>
+    <ion-item
+      *ngFor="let contact of contactList"
+      (click)="saveContact(contact)"
+    >
+      <ion-label>
+        <strong>{{ contact.displayName }}</strong><br />
+        {{ contact.phoneNumbers?.[0]?.value || 'No number available' }}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="savedContacts.length">
+    <ion-list-header> Saved Trusted Contacts </ion-list-header>
+    <ion-item *ngFor="let c of savedContacts">
+      <ion-label>
+        <strong>{{ c.name }}</strong><br />
+        {{ c.phone }}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-text *ngIf="!contactList.length && !savedContacts.length">
+    <p>No contacts imported yet. Tap "Import from Phone" to begin.</p>
+  </ion-text>
+</ion-content>

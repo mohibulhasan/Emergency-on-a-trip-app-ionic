@@ -1,20 +1,53 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title>Journey Tracker</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Welcome Back</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Start a new trip or continue tracking your journey.</p>
+    </ion-card-content>
+  </ion-card>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <ion-card *ngIf="lastPhoto || location">
+    <ion-card-header>
+      <ion-card-title>Last Snapshot</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-img *ngIf="lastPhoto" [src]="lastPhoto"></ion-img>
+      <p *ngIf="location">Location: {{ location.lat }}, {{ location.lng }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" routerLink="/camera">
+          📸 Capture Bus
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" routerLink="/track">
+          🧭 Track Location
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" color="danger" routerLink="/alert">
+          🚨 Emergency Alert
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" routerLink="/contacts">
+          👨‍👩‍👧‍👦 Contacts ({{ contactsCount }})
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
