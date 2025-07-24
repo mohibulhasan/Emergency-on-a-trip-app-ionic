@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, NavController } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 
@@ -15,7 +15,7 @@ export class HomePage {
   location: { lat: number; lng: number } | null = null;
   contactsCount: number = 0;
 
-  constructor(private storage: Storage) {}
+  constructor(private storage: Storage, private navCtrl: NavController) {}
 
   async ngOnInit() {
     await this.storage.create();
@@ -23,5 +23,29 @@ export class HomePage {
     this.location = await this.storage.get('location') || { lat: null, lng: null };
     const contacts = await this.storage.get('trustedContacts');
     this.contactsCount = contacts?.length || 0;
+  }
+
+  goToCamera() {
+    this.navCtrl.navigateForward('/tabs/camera', {
+      animationDirection: 'forward'
+    });
+  }
+
+  goToTrack() {
+    this.navCtrl.navigateForward('/tabs/track', {
+      animationDirection: 'forward'
+    });
+  }
+
+  goToAlert() {
+    this.navCtrl.navigateForward('/tabs/alert', {
+      animationDirection: 'forward'
+    });
+  }
+
+  goToContacts() {
+    this.navCtrl.navigateForward('/contacts', {
+      animationDirection: 'forward'
+    });
   }
 }

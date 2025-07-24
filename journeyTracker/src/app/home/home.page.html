@@ -1,53 +1,63 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Journey Tracker</ion-title>
+    <ion-title>🚌 Journey Tracker</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Welcome Back</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p>Start a new trip or continue tracking your journey.</p>
-    </ion-card-content>
-  </ion-card>
+<ion-content class="scroll-area" fullscreen>
+  <div class="main-content">
+    <ion-card class="welcome-card">
+      <ion-card-header>
+        <ion-card-title class="welcome-title" style="text-align: center"
+          >Hey Explorer 👋</ion-card-title
+        >
+      </ion-card-header>
+      <ion-card-content>
+        <p class="welcome-message">
+          Ready to hit the road? Capture your next bus, track your route, or
+          alert your crew when needed. Your journey starts here. 🚌📍🚨
+        </p>
+      </ion-card-content>
+    </ion-card>
 
-  <ion-card *ngIf="lastPhoto || location">
-    <ion-card-header>
-      <ion-card-title>Last Snapshot</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-img *ngIf="lastPhoto" [src]="lastPhoto"></ion-img>
-      <p *ngIf="location">Location: {{ location.lat }}, {{ location.lng }}</p>
-    </ion-card-content>
-  </ion-card>
+    <ion-card *ngIf="lastPhoto || location">
+      <ion-card-header>
+        <ion-card-title>Last Snapshot</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-img *ngIf="lastPhoto" [src]="lastPhoto"></ion-img>
+        <p *ngIf="location">Location: {{ location.lat }}, {{ location.lng }}</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
 
+<!-- 🔒 Fixed Action Grid -->
+<div class="fixed-grid">
   <ion-grid>
     <ion-row>
       <ion-col>
-        <ion-button expand="block" routerLink="/camera">
+        <ion-button expand="block" color="primary" (click)="goToCamera()">
           📸 Capture Bus
         </ion-button>
       </ion-col>
       <ion-col>
-        <ion-button expand="block" routerLink="/track">
+        <ion-button expand="block" (click)="goToTrack()">
           🧭 Track Location
         </ion-button>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-button expand="block" color="danger" routerLink="/alert">
+        <ion-button expand="block" color="danger" (click)="goToAlert()">
           🚨 Emergency Alert
         </ion-button>
       </ion-col>
       <ion-col>
-        <ion-button expand="block" routerLink="/contacts">
+        <ion-button expand="block" (click)="goToContacts()">
           👨‍👩‍👧‍👦 Contacts ({{ contactsCount }})
         </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
-</ion-content>
+</div>

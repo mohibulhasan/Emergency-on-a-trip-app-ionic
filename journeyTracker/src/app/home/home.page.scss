@@ -25,3 +25,18 @@
 #container a {
   text-decoration: none;
 }
+
+.scroll-area {
+  padding-bottom: 160px; // leaves room for fixed grid
+}
+
+.fixed-grid {
+  position: fixed;
+  bottom: 60px; // just above tab bar
+  left: 0;
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+  padding: 16px;
+  z-index: 1000;
+}

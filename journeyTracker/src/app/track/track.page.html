@@ -1,13 +1,24 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>track</ion-title>
+    <ion-title>Track Location</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">track</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>📍 Current Location</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p *ngIf="location">
+        Latitude: {{ location.lat }}<br />Longitude: {{ location.lng }}
+      </p>
+      <ion-button expand="block" (click)="getLocation()">
+        🔄 Refresh Location
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- 🗺️ Map Container -->
+  <div id="map"></div>
 </ion-content>
