@@ -3,6 +3,7 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import html2canvas from 'html2canvas';
+import * as L from 'leaflet'; // Import Leaflet for map functionality
 
 // Import Geolocation for current location
 import { Geolocation } from '@capacitor/geolocation';
@@ -12,6 +13,13 @@ import { Motion, AccelListenerEvent } from '@capacitor/motion';
 import { PluginListenerHandle } from '@capacitor/core'; // Correct import for PluginListenerHandle
 
 import { ContactService } from '../services/contact.service';
+
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'assets/leaflet/marker-icon-2x.png',
+  iconUrl: 'assets/leaflet/marker-icon.png',
+  shadowUrl: 'assets/leaflet/marker-shadow.png',
+});
 
 @Component({
   selector: 'app-alert',

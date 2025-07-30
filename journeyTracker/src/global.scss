@@ -35,3 +35,30 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+html, body, ion-app, ion-router-outlet {
+  height: 100%;
+  width: 100%;
+  position: absolute; /* Ensures they participate in positioning */
+  top: 0;
+  left: 0;
+  contain: layout size style; /* Optimization, but can also help rendering */
+}
+
+/* Also ensure ion-content expands correctly */
+ion-content {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+  --keyboard-offset: 0;
+  display: flex; /* Make it a flex container */
+  flex-direction: column; /* Arrange children vertically */
+}
+
+/* If your pages also have an app-root or similar, make sure they fill height */
+app-home, app-track, app-alert { /* Add all your page component selectors here */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
