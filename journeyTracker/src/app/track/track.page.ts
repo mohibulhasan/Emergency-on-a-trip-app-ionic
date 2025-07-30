@@ -2,7 +2,7 @@ import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
 import { Geolocation, PositionOptions, WatchPositionCallback } from '@capacitor/geolocation';
 import * as L from 'leaflet';
 import { CommonModule } from '@angular/common';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule, ToastController, RefresherCustomEvent } from '@ionic/angular'; // Imported RefresherCustomEvent
 import { RouterModule } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 
@@ -40,10 +40,14 @@ export class TrackPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async ngAfterViewInit() {
+    // Only load map if location is available, otherwise it will be loaded when getLocation succeeds.
     if (this.location) {
       this.loadMap();
     }
-    await this.getLocation();
+    // Automatically get current location when page loads if not already watching
+    if (this.watchId === null) {
+      await this.getLocation();
+    }
   }
 
   ngOnDestroy() {
@@ -71,7 +75,6 @@ export class TrackPage implements OnInit, AfterViewInit, OnDestroy {
       }
 
       if (watch && this.watchId === null) {
-        // --- FIX: Removed 'await' here ---
         this.watchId = await Geolocation.watchPosition(
           this.geolocationOptions,
           (position: any, err: any) => {
@@ -80,13 +83,13 @@ export class TrackPage implements OnInit, AfterViewInit, OnDestroy {
             } else if (err) {
               console.error('Watch location error:', err);
               this.showToast(`Watch error: ${err.message}`, 'danger');
-              this.stopWatchingLocation();
+              this.stopWatchingLocation(); // Stop watching on error
             }
           }
         );
         await this.showToast('Started continuous location tracking!', 'success');
         console.log('Started watching location with ID:', this.watchId);
-      } else if (!watch) {
+      } else if (!watch && this.watchId === null) { // Only get current position if not already watching
         const position = await Geolocation.getCurrentPosition(this.geolocationOptions);
         this.updateLocation(position);
         await this.showToast('Location refreshed!', 'success');
@@ -95,7 +98,7 @@ export class TrackPage implements OnInit, AfterViewInit, OnDestroy {
       console.error('Location error:', error);
       await this.showToast(`Location error: ${error.message}`, 'danger');
     } finally {
-      if (!watch) {
+      if (!watch) { // Only set isLocating to false if not in continuous watch mode
         this.isLocating = false;
       }
     }
@@ -131,11 +134,31 @@ export class TrackPage implements OnInit, AfterViewInit, OnDestroy {
       this.marker.bindPopup('You are here!').openPopup();
     }
     console.log('Location updated:', this.location);
-    this.isLocating = false;
+    this.isLocating = false; // Reset locating status once update is complete
   }
 
   loadMap() {
-    if (!this.location || this.map) return;
+    // Check if map container exists and Leaflet library is loaded
+    if (!document.getElementById('map')) {
+      console.warn('Map element not found for Leaflet.');
+      return;
+    }
+    if (typeof L === 'undefined') {
+      console.warn('Leaflet library (L) not loaded. Ensure it is included in your index.html.');
+      return;
+    }
+
+    // Prevent re-initialization of the map
+    if (this.map) {
+        this.map.remove(); // Remove existing map instance
+        this.map = null;
+    }
+
+    // Ensure location is available before trying to set view
+    if (!this.location) {
+      console.warn('Cannot load map: location is not available.');
+      return;
+    }
 
     this.map = L.map('map').setView([this.location.lat, this.location.lng], 15);
 
@@ -147,6 +170,25 @@ export class TrackPage implements OnInit, AfterViewInit, OnDestroy {
       .bindPopup('You are here!')
       .openPopup();
     console.log('Map loaded and marker set.');
+  }
+
+  // --- Pull-to-refresh handler for Track Page ---
+  async handleRefresh(event: RefresherCustomEvent) {
+    console.log('Refreshing location data...');
+    try {
+      if (this.watchId === null) { // Only get current location if not continuously tracking
+        await this.getLocation();
+      } else {
+        await this.showToast('Continuous tracking is active. No immediate refresh needed.', 'info');
+      }
+      await this.showToast('Location data updated!', 'success');
+    } catch (error) {
+      console.error('Refresh location failed:', error);
+      await this.showToast('Failed to refresh location.', 'danger');
+    } finally {
+      event.detail.complete(); // Signal that the refresh operation is complete
+      console.log('Location refresh completed.');
+    }
   }
 
   private async showToast(message: string, color: string = 'primary') {

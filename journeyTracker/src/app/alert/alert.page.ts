@@ -9,7 +9,7 @@ import { Geolocation } from '@capacitor/geolocation';
 
 // Corrected import for Motion plugin and its types
 import { Motion, AccelListenerEvent } from '@capacitor/motion';
-import { PluginListenerHandle } from '@capacitor/core';
+import { PluginListenerHandle } from '@capacitor/core'; // Correct import for PluginListenerHandle
 
 import { ContactService } from '../services/contact.service';
 
@@ -183,7 +183,7 @@ export class AlertPage implements OnInit, OnDestroy {
 
     // Fix for Google Maps link (simplified to a generic Google Maps search for lat/lng)
     // Note: Direct image sending via wa.me is not possible.
-    const mapLink = `https://www.google.com/maps/search/?api=1&query=${this.location.lat},${this.location.lng}`;
+    const mapLink = `http://maps.google.com/maps?q=${this.location.lat},${this.location.lng}`;
     const message = `🚨 EMERGENCY! I need help!\nImpact detected at my location.\nMy current location: ${mapLink}`;
     const encodedMsg = encodeURIComponent(message);
 
@@ -223,6 +223,32 @@ export class AlertPage implements OnInit, OnDestroy {
     console.log('Simulating impact...');
     // Directly call the alert function for simulation
     this.triggerEmergencyAlert();
+  }
+
+  async sendImmediateWhatsappToFirstContact() {
+    if (this.trustedContacts.length === 0) {
+      await this.showToast('No trusted contacts configured.', 'warning');
+      console.warn('No trusted contacts to send immediate WhatsApp.');
+      return;
+    }
+
+    const firstContact = this.trustedContacts[0];
+    const phone = firstContact.phone.replace(/\D/g, '');
+
+    if (phone) {
+      await this.getCurrentLocation(); // Get latest location before sending
+
+      const mapLink = `http://maps.google.com/maps?q=${this.location.lat},${this.location.lng}`;
+      const message = `🚨 IMMEDIATE HELP NEEDED! I am sending this message from JourneyTracker.\nMy current location: ${mapLink}`;
+      const encodedMsg = encodeURIComponent(message);
+
+      window.open(`https://wa.me/${phone}?text=${encodedMsg}`, '_blank');
+      await this.showToast(`Immediate alert sent to ${firstContact.name}!`, 'success');
+      console.log(`Immediate WhatsApp sent to ${firstContact.name}.`);
+    } else {
+      await this.showToast(`The first contact (${firstContact.name}) does not have a valid phone number.`, 'danger');
+      console.error(`First contact ${firstContact.name} has no valid phone number for WhatsApp.`);
+    }
   }
 
   private async showToast(message: string, color: string = 'primary') {

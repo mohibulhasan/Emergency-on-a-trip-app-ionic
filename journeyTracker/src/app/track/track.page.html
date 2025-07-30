@@ -5,28 +5,39 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Updating Location..."
+    ></ion-refresher-content>
+  </ion-refresher>
+
   <ion-card>
     <ion-card-header>
       <ion-card-title>📍 Current Location</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <p *ngIf="location">
-        Latitude: {{ location.lat | number:'1.6-6' }}<br />
-        Longitude: {{ location.lng | number:'1.6-6' }}
+        Latitude: **{{ location.lat | number:'1.6-6' }}**<br />
+        Longitude: **{{ location.lng | number:'1.6-6' }}**
       </p>
       <p *ngIf="!location && !isLocating" class="ion-text-center">
-        No location data available.
+        No location data available. Pull down to refresh or tap below.
       </p>
 
       <ion-button
         expand="block"
         (click)="getLocation()"
         [disabled]="isLocating || watchId !== null"
+        color="primary"
       >
         <ion-spinner *ngIf="isLocating && watchId === null"></ion-spinner>
         <ion-icon
           *ngIf="!isLocating || watchId !== null"
           name="refresh-outline"
+          slot="start"
         ></ion-icon>
         Refresh Location
       </ion-button>
@@ -40,6 +51,7 @@
         <ion-icon
           *ngIf="!isLocating"
           [name]="watchId ? 'pause-circle-outline' : 'play-circle-outline'"
+          slot="start"
         ></ion-icon>
         {{ watchId ? 'Stop Continuous Tracking' : 'Start Continuous Tracking' }}
       </ion-button>
