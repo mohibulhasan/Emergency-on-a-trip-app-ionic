@@ -13,23 +13,23 @@ export const routes: Routes = [
     children: [
       {
         path: 'home',
-        loadComponent: () =>
-          import('./home/home.page').then((m) => m.HomePage),
+        loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
       },
       {
         path: 'camera',
-        loadComponent: () =>
-          import('./camera/camera.page').then((m) => m.CameraPage),
+        loadComponent: () => import('./camera/camera.page').then((m) => m.CameraPage),
       },
       {
         path: 'track',
-        loadComponent: () =>
-          import('./track/track.page').then((m) => m.TrackPage),
+        loadComponent: () => import('./track/track.page').then((m) => m.TrackPage),
+      },
+      {
+        path: 'contacts', // ✅ Moved inside tabs
+        loadComponent: () => import('./contacts/contacts.page').then((m) => m.ContactsPage),
       },
       {
         path: 'alert',
-        loadComponent: () =>
-          import('./alert/alert.page').then((m) => m.AlertPage),
+        loadComponent: () => import('./alert/alert.page').then((m) => m.AlertPage),
       },
       {
         path: '',
@@ -39,13 +39,7 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'contacts',
-    loadComponent: () =>
-      import('./contacts/contacts.page').then((m) => m.ContactsPage),
-  },
-  {
-    path: 'test-camera',
-    loadComponent: () =>
-      import('./camera/camera.page').then((m) => m.CameraPage),
+    path: 'test-camera', // You can leave this here if it’s for dev purposes
+    loadComponent: () => import('./camera/camera.page').then((m) => m.CameraPage),
   },
 ];

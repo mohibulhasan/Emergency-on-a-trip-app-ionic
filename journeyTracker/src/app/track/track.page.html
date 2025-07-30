@@ -11,14 +11,40 @@
     </ion-card-header>
     <ion-card-content>
       <p *ngIf="location">
-        Latitude: {{ location.lat }}<br />Longitude: {{ location.lng }}
+        Latitude: {{ location.lat | number:'1.6-6' }}<br />
+        Longitude: {{ location.lng | number:'1.6-6' }}
       </p>
-      <ion-button expand="block" (click)="getLocation()">
-        🔄 Refresh Location
+      <p *ngIf="!location && !isLocating" class="ion-text-center">
+        No location data available.
+      </p>
+
+      <ion-button
+        expand="block"
+        (click)="getLocation()"
+        [disabled]="isLocating || watchId !== null"
+      >
+        <ion-spinner *ngIf="isLocating && watchId === null"></ion-spinner>
+        <ion-icon
+          *ngIf="!isLocating || watchId !== null"
+          name="refresh-outline"
+        ></ion-icon>
+        Refresh Location
+      </ion-button>
+
+      <ion-button
+        expand="block"
+        [color]="watchId ? 'danger' : 'success'"
+        (click)="watchId ? stopWatchingLocation() : getLocation(true)"
+      >
+        <ion-spinner *ngIf="isLocating && watchId !== null"></ion-spinner>
+        <ion-icon
+          *ngIf="!isLocating"
+          [name]="watchId ? 'pause-circle-outline' : 'play-circle-outline'"
+        ></ion-icon>
+        {{ watchId ? 'Stop Continuous Tracking' : 'Start Continuous Tracking' }}
       </ion-button>
     </ion-card-content>
   </ion-card>
 
-  <!-- 🗺️ Map Container -->
   <div id="map"></div>
 </ion-content>

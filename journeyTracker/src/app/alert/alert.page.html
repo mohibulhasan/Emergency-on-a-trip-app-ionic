@@ -1,13 +1,53 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>alert</ion-title>
+<ion-header>
+  <ion-toolbar color="danger">
+    <ion-title>Emergency Alert</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">alert</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <div id="map" style="height: 300px; margin-bottom: 20px"></div>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Impact Monitoring</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-toggle
+        [(ngModel)]="isMonitoringImpact"
+        (ionChange)="isMonitoringImpact ? startImpactMonitoring() : stopImpactMonitoring()"
+        justify="space-between"
+        >Monitor for Impacts</ion-toggle
+      >
+      <p class="ion-text-wrap ion-text-small ion-padding-top">
+        When enabled, the app will listen for sudden movements/impacts and
+        automatically trigger an emergency alert.
+        <br />
+        <small>Threshold: {{ impactThreshold }} m/s²</small>
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="block" color="warning" (click)="triggerEmergencyAlert()">
+    🚨 Trigger Real Emergency Alert
+  </ion-button>
+
+  <div style="position: relative; z-index: 10">
+    <ion-button expand="block" color="medium" (click)="simulateImpact()">
+      🧪 Run Simulation (Test Message)
+    </ion-button>
+  </div>
+
+  <ion-fab
+    vertical="bottom"
+    horizontal="end"
+    slot="fixed"
+    style="margin-bottom: 20px"
+  >
+    <ion-fab-button
+      color="danger"
+      (click)="sendImmediateWhatsappToFirstContact()"
+    >
+      <ion-icon name="send"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

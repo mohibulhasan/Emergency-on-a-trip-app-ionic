@@ -6,12 +6,35 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
+<!-- Show saved contacts -->
+<ion-button expand="full" (click)="toggleSavedContacts()">
+  {{ showSavedContacts ? 'Hide Saved Contacts' : 'Show Saved Contacts' }}
+</ion-button>
+<ion-list *ngIf="showSavedContacts">
+  <ion-item *ngFor="let contact of savedContacts">
+    <ion-label>
+      <h3>{{ contact.name }}</h3>
+      <p>{{ contact.phone }}</p>
+    </ion-label>
+    <ion-button slot="end" color="danger" (click)="deleteContact(contact)">
+      Delete
+    </ion-button>
+  </ion-item>
+</ion-list>
 <ion-content class="ion-padding">
-  <ion-list *ngIf="contactList.length">
+  <!-- Search only if contacts are loaded -->
+  <ion-searchbar
+    [(ngModel)]="searchTerm"
+    (ionInput)="filterContacts()"
+    placeholder="Search contacts..."
+    *ngIf="contactList && contactList.length"
+  ></ion-searchbar>
+
+  <!-- Show filtered contacts -->
+  <ion-list *ngIf="filteredContacts && filteredContacts.length">
     <ion-list-header> Select Contacts to Save </ion-list-header>
     <ion-item
-      *ngFor="let contact of contactList"
+      *ngFor="let contact of filteredContacts"
       (click)="saveContact(contact)"
     >
       <ion-label>
@@ -20,18 +43,13 @@
       </ion-label>
     </ion-item>
   </ion-list>
-
-  <ion-list *ngIf="savedContacts.length">
-    <ion-list-header> Saved Trusted Contacts </ion-list-header>
-    <ion-item *ngFor="let c of savedContacts">
-      <ion-label>
-        <strong>{{ c.name }}</strong><br />
-        {{ c.phone }}
-      </ion-label>
-    </ion-item>
-  </ion-list>
-
-  <ion-text *ngIf="!contactList.length && !savedContacts.length">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openAddContactForm()" color="success">
+      <ion-icon name="person-add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <!-- Fallback message -->
+  <ion-text *ngIf="!contactList?.length && !savedContacts?.length">
     <p>No contacts imported yet. Tap "Import from Phone" to begin.</p>
   </ion-text>
 </ion-content>
